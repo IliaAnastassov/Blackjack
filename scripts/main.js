@@ -3,24 +3,30 @@
     by Ilia Anastassov
 */
 
-let suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
-let ranks = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
-
-let deck = [];
-
-suits.forEach(suit => {
-    ranks.forEach(rank => {
-        deck.push(rank + " of " + suit);
+function createDeck() {
+    let deck = [];
+    let suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
+    let ranks = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
+    
+    suits.forEach(suit => {
+        ranks.forEach(rank => {
+            deck.push(rank + " of " + suit);
+        });
     });
-});
 
-function randomNumber(range) {
-    return Math.round(Math.random() * range);
+    return deck;
 }
 
+function dealCard(deck) {
+    let index = Math.round(Math.random() * deck.length - 1);
+    return deck.splice(index, 1);
+}
+
+let deck = createDeck();
+
 let playerCards = [
-    deck.splice(randomNumber(deck.length - 1), 1),
-    deck.splice(randomNumber(deck.length - 1), 1)
+    dealCard(deck),
+    dealCard(deck)
 ];
 
 console.log("Welcome to Blackjack!");
