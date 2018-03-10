@@ -3,34 +3,48 @@
     by Ilia Anastassov
 */
 
-function createDeck() {
-    let deck = [];
-    let suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
-    let ranks = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
-    
-    suits.forEach(suit => {
-        ranks.forEach(rank => {
-            deck.push(rank + " of " + suit);
+// Card
+class Card {
+    constructor(suit, rank) {
+        this.suit = suit;
+        this.rank = rank;
+    }
+
+    toString() {
+        return this.rank + " of " + this.suit;
+    }
+}
+
+// Deck
+class Deck {
+    constructor() {
+        this.cards = [];
+        let suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
+        let ranks = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
+
+        suits.forEach(suit => {
+            ranks.forEach(rank => {
+                let card = new Card(suit, rank);
+                this.cards.push(card);
+            });
         });
-    });
+    }
 
-    return deck;
+    dealCard() {
+        return this.cards.shift();
+    }
 }
 
-function dealCard(deck) {
-    let index = Math.round(Math.random() * deck.length - 1);
-    return deck.splice(index, 1);
-}
-
-let deck = createDeck();
-
+let deck = new Deck();
 let playerCards = [
-    dealCard(deck),
-    dealCard(deck)
+    deck.dealCard(),
+    deck.dealCard()
 ];
 
+// Game
 console.log("Welcome to Blackjack!");
-
 console.log("You have been dealt:");
-console.log("\t" + playerCards[0]);
-console.log("\t" + playerCards[1]);
+playerCards.forEach(card => {
+    console.log("\t" + card.toString())
+});
+
