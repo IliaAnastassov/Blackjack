@@ -35,11 +35,31 @@ class Deck {
     }
 }
 
-let deck = new Deck();
-let playerCards = [
-    deck.dealCard(),
-    deck.dealCard()
-];
+// DOM
+let textArea = document.getElementById("text-area");
+let newGameButton = document.getElementById("new-game-button");
+let hitButton = document.getElementById("hit-button");
+let stayButton = document.getElementById("stay-button");
+
+hitButton.style.display = "none";
+stayButton.style.display = "none";
+
+newGameButton.addEventListener("click", function () {
+    newGameButton.style.display = "none";
+    hitButton.style.display = "inline";
+    stayButton.style.display = "inline";
+    
+    let deck = new Deck();
+    let playerCards = [];
+
+    playerCards.push(deck.dealCard());
+    playerCards.push(deck.dealCard());
+
+    textArea.innerText = "You have been dealt:\n" + playerCards[0] + "\n" + playerCards[1];
+});
+
+hitButton.addEventListener("click", function () {
+});
 
 // Game
 console.log("Welcome to Blackjack!");
