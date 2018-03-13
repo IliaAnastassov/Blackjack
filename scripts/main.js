@@ -30,6 +30,15 @@ class Deck {
         });
     }
 
+    shuffle() {
+        for (let i = 0; i < this.cards.length; i++) {
+            let swapIndex = Math.trunc(Math.random() * this.cards.length);
+            let temp = this.cards[swapIndex];
+            this.cards[swapIndex] = this.cards[i];
+            this.cards[i] = temp;
+        }
+    }
+
     dealCard() {
         return this.cards.shift();
     }
@@ -58,6 +67,7 @@ newGameButton.addEventListener("click", function () {
     playerWon = false;
 
     deck = new Deck();
+    deck.shuffle();
     dealerCards = [deck.dealCard(), deck.dealCard()];
     playerCards = [deck.dealCard(), deck.dealCard()];
 
