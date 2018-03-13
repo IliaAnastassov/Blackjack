@@ -35,36 +35,50 @@ class Deck {
     }
 }
 
-// DOM
-let textArea = document.getElementById("text-area");
-let newGameButton = document.getElementById("new-game-button");
-let hitButton = document.getElementById("hit-button");
-let stayButton = document.getElementById("stay-button");
+// DOM variables
+let textArea = document.getElementById("text-area"),
+    newGameButton = document.getElementById("new-game-button"),
+    hitButton = document.getElementById("hit-button"),
+    stayButton = document.getElementById("stay-button");
 
-hitButton.style.display = "none";
-stayButton.style.display = "none";
+// Game variables
+let gameStarted = false,
+    gameOver = false,
+    playerWon = false,
+    dealerCards = [],
+    playerCards = [],
+    dealerScore = 0,
+    playerScore = 0,
+    deck;
 
+// Events
 newGameButton.addEventListener("click", function () {
+    gameStarted = true;
+    gameOver = false;
+    playerWon = false;
+
+    deck = new Deck();
+    dealerCards = [deck.dealCard(), deck.dealCard()];
+    playerCards = [deck.dealCard(), deck.dealCard()];
+
     newGameButton.style.display = "none";
     hitButton.style.display = "inline";
     stayButton.style.display = "inline";
-    
-    let deck = new Deck();
-    let playerCards = [];
 
-    playerCards.push(deck.dealCard());
-    playerCards.push(deck.dealCard());
-
-    textArea.innerText = "You have been dealt:\n" + playerCards[0] + "\n" + playerCards[1];
+    showStatus();
 });
 
 hitButton.addEventListener("click", function () {
 });
 
-// Game
-console.log("Welcome to Blackjack!");
-console.log("You have been dealt:");
-playerCards.forEach(card => {
-    console.log("\t" + card.toString())
-});
-
+// Functions
+function showStatus() {
+    if (!gameStarted) {
+        textArea.innerText = "Welcome to Blackjack!";
+    } else {
+        textArea.innerText = "You have been dealt:\n";
+        playerCards.forEach(card => {
+            textArea.innerText += card.toString() + "\n";
+        });
+    }
+}
