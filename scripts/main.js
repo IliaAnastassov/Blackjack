@@ -6,8 +6,21 @@
 // Card
 class Card {
     constructor(suit, rank) {
+        this.value;
         this.suit = suit;
         this.rank = rank;
+    }
+
+    getValue() {
+        if (this.rank === "Ace") {
+            this.value = 11;
+        } else if (this.rank === "Jack" || this.rank === "Queen" || this.rank === "King") {
+            this.value = 10;
+        } else {
+            this.value = parseInt(this.rank);
+        }
+
+        return this.value;
     }
 
     toString() {
