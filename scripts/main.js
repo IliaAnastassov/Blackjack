@@ -61,7 +61,8 @@ class Deck {
 let textArea = document.getElementById("text-area"),
     newGameButton = document.getElementById("new-game-button"),
     hitButton = document.getElementById("hit-button"),
-    stayButton = document.getElementById("stay-button");
+    stayButton = document.getElementById("stay-button")
+    outcomeHeader = document.getElementById("outcome-header");
 
 // Game variables
 let gameStarted = false,
@@ -84,6 +85,9 @@ newGameButton.addEventListener("click", function () {
     dealerCards = [deck.dealCard(), deck.dealCard()];
     playerCards = [deck.dealCard(), deck.dealCard()];
 
+    outcomeHeader.style.display = "none";
+    outcomeHeader.innerText = "";
+    
     newGameButton.style.display = "none";
     hitButton.style.display = "inline";
     stayButton.style.display = "inline";
@@ -92,16 +96,75 @@ newGameButton.addEventListener("click", function () {
 });
 
 hitButton.addEventListener("click", function () {
+    playerCards.push(deck.dealCard());
+    showStatus();
 });
+
+stayButton.addEventListener("click", function () {
+    dealerCards.push(deck.dealCard());
+    showStatus();
+})
 
 // Functions
 function showStatus() {
     if (!gameStarted) {
         textArea.innerText = "Welcome to Blackjack!";
     } else {
-        textArea.innerText = "You have been dealt:\n";
+        // Dealer
+        textArea.innerText = "Dealer has:\n";
+        dealerCards.forEach(card => {
+            textArea.innerText += card.toString() + "\n";
+        });
+        dealerScore = calculateScore(dealerCards);
+        textArea.innerText += "Dealer score: " + dealerScore + "\n\n";
+
+        // Player
+        textArea.innerText += "You have:\n";
         playerCards.forEach(card => {
             textArea.innerText += card.toString() + "\n";
         });
+        playerScore = calculateScore(playerCards);
+        textArea.innerText += "Your score: " + playerScore;
+
+        // Outcome
+        if (dealerScore === 21 || playerScore > 21) {
+            gameOver = true;
+        } else if (playerScore === 21 || dealerScore > 21) {
+            gameOver = true;
+            playerWon = true;
+        }
+
+        if (gameOver) {
+            outcomeHeader.style.display = "block";
+
+            if (playerWon) {
+                outcomeHeader.innerText += "You win";
+            } else {
+                outcomeHeader.innerText += "Dealer wins";
+            }
+
+            newGameButton.style.display = "inline";
+            hitButton.style.display = "none";
+            stayButton.style.display = "none";
+        }
     }
+}
+
+function calculateScore(cards) {
+    let score = 0;
+    let hasAce = false;
+
+    cards.forEach(card => {
+        score += card.getValue();
+
+        if (card.rank === "Ace") {
+            hasAce = true;
+        }
+    });
+
+    if (hasAce && score > 21) {
+        score -= 10;
+    }
+
+    return score;
 }
