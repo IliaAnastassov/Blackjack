@@ -87,20 +87,24 @@ newGameButton.addEventListener("click", function () {
     playerCards = [deck.dealCard(), deck.dealCard()];
 
     outcomeHeader.style.display = "none";
+    outcomeHeader.innerText = "";
     newGameButton.style.display = "none";
     hitButton.style.display = "inline";
     stayButton.style.display = "inline";
 
+    checkForEndOfGame();
     showStatus();
 });
 
 hitButton.addEventListener("click", function () {
     playerCards.push(deck.dealCard());
+    checkForEndOfGame();
     showStatus();
 });
 
 stayButton.addEventListener("click", function () {
-    dealerCards.push(deck.dealCard());
+    gameOver = true;
+    checkForEndOfGame();
     showStatus();
 })
 
@@ -112,42 +116,46 @@ function showStatus() {
     }
 
     // Dealer
-    textArea.innerText = "Dealer has:\n";
+    let dealerCardString = "";
     dealerCards.forEach(card => {
-        textArea.innerText += card.toString() + "\n";
+        dealerCardString += card.toString() + "\n";
     });
-    dealerScore = getScore(dealerCards);
-    textArea.innerText += "Dealer score: " + dealerScore + "\n\n";
 
     // Player
-    textArea.innerText += "You have:\n";
+    let playerCardString = "";
     playerCards.forEach(card => {
-        textArea.innerText += card.toString() + "\n";
+        playerCardString += card.toString() + "\n";
     });
-    playerScore = getScore(playerCards);
-    textArea.innerText += "Your score: " + playerScore;
 
-    // Outcome
-    if (dealerScore === 21 || playerScore > 21) {
-        gameOver = true;
-    } else if (playerScore === 21 || dealerScore > 21) {
-        gameOver = true;
-        playerWon = true;
-    }
+    updateScores();
+
+    // Text Area
+    textArea.innerText =
+        "Dealer has:\n"
+        + dealerCardString
+        + "(" + "score: " + dealerScore + ")\n\n"
+        + "Player has:\n"
+        + playerCardString
+        + "(" + "score: " + playerScore + ")";
 
     if (gameOver) {
         outcomeHeader.style.display = "block";
 
         if (playerWon) {
-            outcomeHeader.innerText = "You win";
+            outcomeHeader.innerText = "YOU WIN";
         } else {
-            outcomeHeader.innerText = "Dealer wins";
+            outcomeHeader.innerText = "DEALER WINS";
         }
 
         newGameButton.style.display = "inline";
         hitButton.style.display = "none";
         stayButton.style.display = "none";
     }
+}
+
+function updateScores() {
+    dealerScore = getScore(dealerCards);
+    playerScore = getScore(playerCards);
 }
 
 function getScore(cardArray) {
@@ -166,4 +174,24 @@ function getScore(cardArray) {
     }
 
     return score;
+}
+
+function checkForEndOfGame() {
+    updateScores();
+
+    if (gameOver) {
+        while (dealerScore < playerScore) {
+            dealerCards.push(deck.dealCard());
+            updateScores();
+        }
+    }
+
+    if (dealerScore === 21 || playerScore > 21) {
+        gameOver = true;
+    } else if (playerScore === 21 
+            || dealerScore > 21 
+            || (dealerScore < playerScore && gameOver)) {
+        gameOver = true;
+        playerWon = true;
+    }
 }
