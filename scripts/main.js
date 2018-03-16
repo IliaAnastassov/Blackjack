@@ -116,7 +116,7 @@ function showStatus() {
     dealerCards.forEach(card => {
         textArea.innerText += card.toString() + "\n";
     });
-    dealerScore = calculateScore(dealerCards);
+    dealerScore = getScore(dealerCards);
     textArea.innerText += "Dealer score: " + dealerScore + "\n\n";
 
     // Player
@@ -124,7 +124,7 @@ function showStatus() {
     playerCards.forEach(card => {
         textArea.innerText += card.toString() + "\n";
     });
-    playerScore = calculateScore(playerCards);
+    playerScore = getScore(playerCards);
     textArea.innerText += "Your score: " + playerScore;
 
     // Outcome
@@ -150,13 +150,12 @@ function showStatus() {
     }
 }
 
-function calculateScore(cards) {
+function getScore(cardArray) {
     let score = 0;
     let hasAce = false;
 
-    cards.forEach(card => {
+    cardArray.forEach(card => {
         score += card.getValue();
-
         if (card.rank === "Ace") {
             hasAce = true;
         }
