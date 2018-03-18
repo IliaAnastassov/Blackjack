@@ -3,6 +3,9 @@
     by Ilia Anastassov
 */
 
+// TODO: Add TIE message in case of tie
+//       Add All Time Score
+
 // Card
 class Card {
     constructor(suit, rank) {
@@ -69,6 +72,8 @@ outcomeHeader = document.getElementById("outcome-header");
 let gameStarted = false,
     gameOver = false,
     playerWon = false,
+    playerBlackJack = false,
+    isTie = false,
     dealerCards = [],
     playerCards = [],
     dealerScore = 0,
@@ -80,6 +85,8 @@ newGameButton.addEventListener("click", function () {
     gameStarted = true;
     gameOver = false;
     playerWon = false;
+    playerBlackJack = false;
+    isTie = false;
 
     deck = new Deck();
     deck.shuffle();
@@ -138,18 +145,28 @@ function showStatus() {
         + playerCardString
         + "(" + "score: " + playerScore + ")";
 
+    // Outcome
     if (gameOver) {
-        outcomeHeader.style.display = "block";
-
-        if (playerWon) {
-            outcomeHeader.innerText = "YOU WIN";
-        } else {
-            outcomeHeader.innerText = "DEALER WINS";
-        }
+        showOutcome();
 
         newGameButton.style.display = "inline";
         hitButton.style.display = "none";
         stayButton.style.display = "none";
+    }
+}
+
+function showOutcome() {
+    outcomeHeader.style.display = "block";
+    if (playerWon) {
+        if (playerBlackJack) {
+            outcomeHeader.innerText = "BLACKJACK! YOU WIN";
+        } else {
+            outcomeHeader.innerText = "YOU WIN";
+        }
+    } else if (isTie) {
+        outcomeHeader.innerText = "IT'S A TIE";
+    } else {
+        outcomeHeader.innerText = "DEALER WINS";
     }
 }
 
@@ -180,7 +197,7 @@ function checkForEndOfGame() {
     updateScores();
 
     if (gameOver) {
-        while (dealerScore < playerScore) {
+        while (dealerScore < playerScore && dealerScore < 21 && dealerCards.length <= 5) {
             dealerCards.push(deck.dealCard());
             updateScores();
         }
@@ -188,10 +205,20 @@ function checkForEndOfGame() {
 
     if (dealerScore === 21 || playerScore > 21) {
         gameOver = true;
-    } else if (playerScore === 21 
-            || dealerScore > 21 
-            || (dealerScore < playerScore && gameOver)) {
+    } else if (playerScore === 21 || dealerScore > 21) {
         gameOver = true;
         playerWon = true;
+
+        if (playerScore === 21) {
+            playerBlackJack = true;
+        }
+    } else if (gameOver) {
+        if (playerScore < dealerScore || dealerCards.length === 5) {
+            playerWon = false;
+        } else if (playerScore === dealerScore) {
+            isTie = true;
+        } else {
+            playerWon = true;
+        }
     }
 }
