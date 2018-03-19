@@ -3,8 +3,7 @@
     by Ilia Anastassov
 */
 
-// TODO: Add TIE message in case of tie
-//       Add All Time Score
+// TODO: Add All Time Score
 
 // Card
 class Card {
