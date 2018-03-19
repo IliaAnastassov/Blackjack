@@ -3,7 +3,7 @@
     by Ilia Anastassov
 */
 
-// TODO: Add All Time Score
+"use strict";
 
 // Card
 class Card {
@@ -64,8 +64,12 @@ class Deck {
 let textArea = document.getElementById("text-area"),
     newGameButton = document.getElementById("new-game-button"),
     hitButton = document.getElementById("hit-button"),
-    stayButton = document.getElementById("stay-button")
-outcomeHeader = document.getElementById("outcome-header");
+    stayButton = document.getElementById("stay-button"),
+    outcomeHeader = document.getElementById("outcome-header"),
+    playerStats = document.getElementById("player-stats"),
+    playerWinsStats = document.getElementById("player-wins"),
+    playerLossesStats = document.getElementById("player-losses"),
+    tiesStats = document.getElementById("ties");
 
 // Game variables
 let gameStarted = false,
@@ -77,6 +81,9 @@ let gameStarted = false,
     playerCards = [],
     dealerScore = 0,
     playerScore = 0,
+    playerWinsCount = 0,
+    playerLossesCount = 0,
+    tiesCount = 0,
     deck;
 
 // Events
@@ -94,9 +101,12 @@ newGameButton.addEventListener("click", function () {
 
     outcomeHeader.style.display = "none";
     outcomeHeader.innerText = "";
+
     newGameButton.style.display = "none";
     hitButton.style.display = "inline";
     stayButton.style.display = "inline";
+
+    playerStats.style.display = "block";
 
     checkForEndOfGame();
     showStatus();
@@ -219,5 +229,23 @@ function checkForEndOfGame() {
         } else {
             playerWon = true;
         }
+    }
+
+    updateStats();
+}
+
+function updateStats() {
+    if (gameOver) {
+        if (playerWon) {
+            playerWinsCount++;
+        } else if (isTie) {
+            tiesCount++;
+        } else {
+            playerLossesCount++;
+        }
+
+        playerWinsStats.innerText = "Wins: " + playerWinsCount;
+        playerLossesStats.innerText = "Losses: " + playerLossesCount;
+        tiesStats.innerText = "Ties: " + tiesCount;
     }
 }
