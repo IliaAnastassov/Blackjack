@@ -12,7 +12,7 @@ class Card {
         this.rank = rank;
     }
 
-    getValue() {
+    get value() {
         let value = 0;
 
         if (this.rank === "Ace") {
@@ -189,7 +189,7 @@ function getScore(cardArray) {
     let hasAce = false;
 
     cardArray.forEach(card => {
-        score += card.getValue();
+        score += card.value;
         if (card.rank === "Ace") {
             hasAce = true;
         }
